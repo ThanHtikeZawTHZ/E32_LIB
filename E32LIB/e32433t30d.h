@@ -29,7 +29,7 @@ class E32{
   //Address
   uint8_t addH;
   uint8_t addL;
-  uint8_t txChannel;
+  uint8_t channel;
 
   //Instruction Sequence
   //Header
@@ -58,7 +58,7 @@ class E32{
 
   public:
 
-  E32(HardwareSerial * serial,BAUD_RATE baud, uint8_t rx, uint8_t tx, uint8_t m0, uint8_t m1, uint8_t aux);
+  E32(HardwareSerial * serial,BAUD_RATE baud, AIR_RATE air, uint8_t rx, uint8_t tx, uint8_t m0, uint8_t m1, uint8_t aux);
   void init ();
   void pinInit (void) const;
   uint8_t sendData (uint8_t * data, uint8_t size);
@@ -69,6 +69,7 @@ class E32{
   void showParam (uint8_t * param);
   uint8_t isFree (void);
   uint8_t changeMode (MODE md);
+  uint8_t sendTo (uint8_t channel, uint8_t highAddr, uint8_t lowAddr, char * data, uint8_t size);
 };
 
 #endif

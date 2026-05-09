@@ -1,15 +1,14 @@
 #include "e32433t30d.h"
 
-E32::E32(HardwareSerial * serial,BAUD_RATE baud, uint8_t rx, uint8_t tx, uint8_t m0, uint8_t m1, uint8_t aux):Eserial(serial), baudRate(baud), rx_pin(rx), tx_pin(tx), m0_pin(m0), m1_pin(m1), aux_pin(aux){
+E32::E32(HardwareSerial * serial,BAUD_RATE baud, AIR_RATE air, uint8_t rx, uint8_t tx, uint8_t m0, uint8_t m1, uint8_t aux):Eserial(serial), baudRate(baud),airRate(air), rx_pin(rx), tx_pin(tx), m0_pin(m0), m1_pin(m1), aux_pin(aux){
   
   head = 0xC0;
 
   addH = 0xDD;
   addL = 0xcc;
 
-  txChannel = 0x0B;
+  channel = 0x0B;
 
-  airRate = _9P6;
   parity = _8N1;
 
   tranPower = _30dBm;
@@ -28,7 +27,7 @@ void E32::init (){
   Eserial->write(addH);
   Eserial->write(addL);
   Eserial->write(sped);
-  Eserial->write(txChannel);
+  Eserial->write(channel);
   Eserial->write(option);
 
   changeMode(NORMAL);
@@ -40,6 +39,19 @@ void E32::pinInit (void) const{
   pinMode(m1_pin, OUTPUT);
   pinMode(aux_pin, INPUT);
 
+}
+
+uint8_t E32::sendTo (uint8_t chan, uint8_t highAddr, uint8_t lowAddr, char * data, uint8_t size){
+  while(!isFree()){
+    ;
+  }
+  sendByte(highAddr);
+  sendByte(lowAddr);
+  sendByte(chan);
+  for(uint8_t i=0; i<size; i++){
+    sendByte(data[i]);
+  }
+  return 1;
 }
 
 uint8_t E32::sendData (uint8_t * data, uint8_t size){
@@ -85,6 +97,7 @@ uint8_t E32::getParam (uint8_t * param){
 
   return 1;
 }
+
 void E32::showParam (uint8_t * param){
   //head
   Serial.print("Head : ");
@@ -119,7 +132,7 @@ void E32::showParam (uint8_t * param){
   Serial.print("TTL UART baud rate (bps) : ");
   Serial.println(baud_rate[bp]);
 
-  uint8_t air = (param[3] & 3<<0) >> 0;
+  uint8_t air = (param[3] & 7<<0) >> 0;
   Serial.print("Air data rate (bps) : ");
   Serial.println(air_rate[air]);
 

@@ -54,6 +54,16 @@ uint8_t E32::sendTo (uint8_t chan, uint8_t highAddr, uint8_t lowAddr, char * dat
   return 1;
 }
 
+uint8_t E32::sendTo (uint8_t chan, uint8_t highAddr, uint8_t lowAddr, uint8_t data){
+  while(!isFree()){
+    ;
+  }
+  sendByte(highAddr);
+  sendByte(lowAddr);
+  sendByte(chan);
+  sendByte(data);
+}
+
 uint8_t E32::sendData (uint8_t * data, uint8_t size){
   while(!isFree()){
     ;

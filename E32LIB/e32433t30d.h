@@ -69,7 +69,8 @@ class E32{
   void showParam (uint8_t * param);
   uint8_t isFree (void);
   uint8_t changeMode (MODE md);
-  uint8_t sendTo (uint8_t channel, uint8_t highAddr, uint8_t lowAddr, char * data, uint8_t size);
+  uint8_t sendTo (uint8_t chan, uint8_t highAddr, uint8_t lowAddr, char * data, uint8_t size);
+  uint8_t sendTo (uint8_t chan, uint8_t highAddr, uint8_t lowAddr, uint8_t data);
 };
 
 #endif

@@ -5,8 +5,9 @@
 //#define RX
 
 HardwareSerial uart2(2);
+char num=0;
 
-E32 myE32(&uart2, _19200, _9P6 , 16, 17, 2, 4, 5);
+E32 myE32(&uart2, _19200, _19P2 , 16, 17, 2, 4, 5);
 
 void setup (){
   Serial.begin(115200);
@@ -20,11 +21,13 @@ void setup (){
 void loop(){
 
   #ifdef TX
-  myE32.sendTo(0x0B, 0xDD, 0xCC, "hello\n",  6);
-  delay(100);
+
+  myE32.sendTo(0x0B, 0xDD, 0xCC, &num,  1);
+  num++;
+  delay(50);
   #endif
   if(myE32.available()){
-    Serial.print((char)myE32.getData());
+    Serial.println((int)myE32.getData());
   }
 
 }
